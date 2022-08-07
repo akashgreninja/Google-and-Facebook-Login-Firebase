@@ -1,0 +1,56 @@
+import { initializeApp } from "firebase/app";
+import { getAuth,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore"; 
+import { doc, setDoc } from "firebase/firestore"; 
+
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBOMQPcIxTBNp2h0rDx6jUIltXuo2wqsjE",
+  authDomain: "testing-auth-f7e56.firebaseapp.com",
+  projectId: "testing-auth-f7e56",
+  storageBucket: "testing-auth-f7e56.appspot.com",
+  messagingSenderId: "336252674843",
+  appId: "1:336252674843:web:efb644dfcbcf4bb8b729be",
+  measurementId: "G-VRS8XM85JT"
+};
+
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+
+ export const SignIn=async()=>{
+    signInWithPopup(auth, provider).then(async(result)=>{
+
+        
+        const user = result.user.displayName;
+        const email =result.user.email;
+        const phone=result.user.phoneNumber;
+        const photo=result.user.photoURL;
+        
+        const docRef = await addDoc(collection(db, "users"), {
+            user: user,
+            email:email,
+            photo: photo,
+          });
+        // await User.set(user)
+        //   console.log(user);
+        
+    //INCASE YOU WANT TO CHANGE THE NAME OF THE
+    // const cityRef = doc(db, 'users', `${user}`);
+    // setDoc(cityRef, { user:user  }, );
+            
+    }).catch((error)=>{
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+    })
+}
+

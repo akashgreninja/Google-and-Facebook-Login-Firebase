@@ -1,10 +1,13 @@
 
 import './App.css';
-import {SignIn} from './firebaseauth'
+import {SignIn,facebook} from './firebaseauth'
 
 function App() {
   return (
+    <>
    <button onClick={SignIn}>Sign In</button>
+   <button onClick={facebook}>Facebook</button>
+   </>
 
   );
 }

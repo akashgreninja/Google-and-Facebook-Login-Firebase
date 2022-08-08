@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth,GoogleAuthProvider, signInWithPopup,FacebookAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore"; 
 import { doc, setDoc } from "firebase/firestore"; 
@@ -21,6 +21,7 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 const db = getFirestore(app);
+const fbprovider = new FacebookAuthProvider();
 const provider = new GoogleAuthProvider();
 
 
@@ -41,7 +42,7 @@ const provider = new GoogleAuthProvider();
         // await User.set(user)
         //   console.log(user);
         
-    //INCASE YOU WANT TO CHANGE THE NAME OF THE
+    //INCASE YOU WANT TO CHANGE THE ID
     // const cityRef = doc(db, 'users', `${user}`);
     // setDoc(cityRef, { user:user  }, );
             
@@ -52,5 +53,27 @@ const provider = new GoogleAuthProvider();
         const email = error.customData.email;
         // The AuthCredential type that was used.
     })
+}
+
+
+
+export const facebook=()=>{
+  signInWithPopup(auth, fbprovider).then((result)=>{
+    const user = result.user.displayName;
+    const email =result.user.email;
+    const photo=result.user.photoURL;
+    const addingadoc=addDoc(collection(db,"facebook"),{
+      user:user,
+      email:email,
+      photo:photo
+    })
+    
+  }).catch((error)=>{
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+  })
 }
 
